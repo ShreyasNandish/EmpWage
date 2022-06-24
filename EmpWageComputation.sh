@@ -1,46 +1,46 @@
 #!/bin/bash -x
 
-TotalWorkingHrs() {
-while [[ $totalEmpHrs -ne $MaxWorkinghourinmonth && $totalWorkingDays -ne $Monthworkdays ]]
+Wage=()
+
+Monthworkdays=20
+empRateperhour=20
+FullDayHour=8
+HalfDayHour=4
+
+daily_Wage=0
+monthly_Wage=0
+
+for i in `seq $Monthworkdays`
 do
-        ((totalWorkingDays++))
-        random=$(( $RANDOM % 3 ))
+	random=$(( $RANDOM % 3 ))
 
 
         case $random in
-        1)
-                #Present fullday
-                empHrs=8
-                ;;
-        2)
-                #Present halfday
-                empHrs=4
-                ;;
-        *)
-                #absent
-                empHrs=0
-                ;;
+
+	1)
+                daily_Wage=$(( $empRateperhour * $FullDayHour ))
+        ;;
+
+	2)
+                daily_Wage=$(( $empRateperhour * $HalfDayHour ))
+        ;;
+
+	*)
+                #Absent
+		daily_Wage=0
+        ;;
+
         esac
 
-        totalEmpHrs=$(( $totalEmpHrs + $empHrs ))
+	Wage[$i]=$daily_Wage
+
+monthly_Wage=$(( $monthly_Wage + $daily_Wage ))
+
 done
-}
 
-Monthworkdays=20
-MaxWorkinghourinmonth=100
-WagePerHour=20
-FullDayHour=8
-HalfDayHour=4
-monthly_Wage=0
+	Wage[$(( $i + 1))]=$monthly_Wage
 
-totalEmpHrs=0
-totalWorkingDays=0
+echo ${!Wage[@]}
 
-echo "Calculate work hours for one month"
-
-TotalWorkingHrs
-
-echo "Total working hours for a month $totalEmpHrs"
-
-
+echo ${Wage[@]}
 
