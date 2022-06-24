@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-Wage=()
+declare -A Wage
 
 Monthworkdays=20
 empRateperhour=20
@@ -17,30 +17,28 @@ do
 
         case $random in
 
-	1)
+
+        1)
                 daily_Wage=$(( $empRateperhour * $FullDayHour ))
         ;;
-
-	2)
+        2)
                 daily_Wage=$(( $empRateperhour * $HalfDayHour ))
         ;;
-
-	*)
-                #Absent
+        *)
 		daily_Wage=0
         ;;
 
         esac
 
 	Wage[$i]=$daily_Wage
-
+	
 monthly_Wage=$(( $monthly_Wage + $daily_Wage ))
 
 done
 
-	Wage[$(( $i + 1))]=$monthly_Wage
+	Wage[$(( $i + 1 ))]=$monthly_Wage
 
-echo ${!Wage[@]}
-
-echo ${Wage[@]}
-
+for i in `seq 21`
+do
+        echo "$i - ${Wage[$i]}"
+done
