@@ -1,42 +1,46 @@
-
 #!/bin/bash -x
 
-echo " Hello welcome to Employee wage program"
-
-ispresent=1;
-empRateperhour=20;
-empfulldayhour=8;
-emphalfdayhour=4;
-Monthworkdays=20;
-DailyWage=0;
-Totalworkhours=0;
-Totalworkdays=0;
-empcheck=$((RANDOM%3))
-
-while [ $Totalworkhours -le 100 ] && [ $Totalworkdays -le 20 ]
+TotalWorkingHrs() {
+while [[ $totalEmpHrs -ne $MaxWorkinghourinmonth && $totalWorkingDays -ne $Monthworkdays ]]
 do
-case $empcheck in
-	0)
-		 echo "Employee is working full time"
-	         DailyWage=$(($empRateperhour * $empfulldayhour))
-		 MonthlyWage=$(($DailyWage*$Monthworkdays))
-        	 echo "Emploee daily wage is" $DailyWage
-		 echo "Employee monthly wage is" $MonthlyWage
-		 Totalworkhours=$(($Totalworkhours + $empfulldayhour));;
-	1)
-                 echo "Employee is working part time"
-                 DailyWage=$(($empRateperhour * $emphalfdayhour))
-		 MonthlyWage=$(($DailyWage*$Monthworkdays))
-	         echo "Emploee daily wage is" $DailyWage
-		 echo "Employee monthly wage is" $MonthlyWage
-		 Totalworkhours=$(($Totalworkhours + $emphalfdayhour));;
+        ((totalWorkingDays++))
+        random=$(( $RANDOM % 3 ))
 
-	*)
-		echo "Employee is absent";;
-esac
-Totalworkdays=$(($Totalworkdays+1))
 
+        case $random in
+        1)
+                #Present fullday
+                empHrs=8
+                ;;
+        2)
+                #Present halfday
+                empHrs=4
+                ;;
+        *)
+                #absent
+                empHrs=0
+                ;;
+        esac
+
+        totalEmpHrs=$(( $totalEmpHrs + $empHrs ))
 done
+}
+
+Monthworkdays=20
+MaxWorkinghourinmonth=100
+WagePerHour=20
+FullDayHour=8
+HalfDayHour=4
+monthly_Wage=0
+
+totalEmpHrs=0
+totalWorkingDays=0
+
+echo "Calculate work hours for one month"
+
+TotalWorkingHrs
+
+echo "Total working hours for a month $totalEmpHrs"
 
 
 
